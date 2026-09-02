@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${pageTitle}">Update Service Order</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <div th:replace="~{fragments/nav :: navbar('service-orders')}"></div>
+
+    <main class="page">
+        <div class="page-header">
+            <div>
+                <p class="eyebrow">Bike Shop</p>
+                <h1 th:text="'Update Order #' + ${order.orderId}">Update Order</h1>
+            </div>
+        </div>
+
+        <section class="next-steps">
+            <div class="alert warning" th:if="${databaseError}">
+                The service order could not be updated yet. Check that MySQL is connected.
+            </div>
+
+            <p>
+                <strong th:text="${order.customerName}">Customer</strong><br>
+                <span th:text="${order.bikeName}">Bike</span><br>
+                <span th:text="${order.serviceType}">Service</span>
+            </p>
+
+            <form th:action="@{/service-orders/{id}(id=${order.orderId})}" th:object="${serviceOrderUpdateForm}" method="post">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="status">Status</label>
+                        <select id="status" th:field="*{status}">
+                            <option th:each="status : ${statuses}"
+                                    th:value="${status.name()}"
+                                    th:text="${status.displayName}">Not Started</option>
+                        </select>
+                        <div class="error" th:errors="*{status}"></div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="totalAmount">Total Amount</label>
+                        <input id="totalAmount" type="number" min="0" step="0.01" th:field="*{totalAmount}">
+                        <div class="error" th:errors="*{totalAmount}"></div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a class="button secondary" th:href="@{/service-orders}">Cancel</a>
+                    <button class="button" type="submit">Save Updates</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

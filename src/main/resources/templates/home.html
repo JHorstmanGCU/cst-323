@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${pageTitle}">Bike Shop Order Tracker</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <div th:replace="~{fragments/nav :: navbar('home')}"></div>
+
+    <main class="page">
+        <section class="hero">
+            <h1>Bike Shop Order Tracker</h1>
+        </section>
+
+        <section class="menu-panel">
+            <a class="button menu-button" th:href="@{/customers}">Customers</a>
+            <a class="button menu-button" th:href="@{/bikes}">Bikes</a>
+            <a class="button menu-button" th:href="@{/parts}">Parts</a>
+            <a class="button menu-button" th:href="@{/service-orders}">Service Orders</a>
+        </section>
+    </main>
+</body>
+</html>

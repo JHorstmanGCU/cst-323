@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${pageTitle}">Parts</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <div th:replace="~{fragments/nav :: navbar('parts')}"></div>
+
+    <main class="page">
+        <div class="page-header">
+            <div>
+                <p class="eyebrow">Bike Shop</p>
+                <h1>Parts</h1>
+            </div>
+            <a class="button" th:href="@{/parts/new}">Add Part</a>
+        </div>
+
+        <div class="alert success" th:if="${param.created != null}">
+            Part added.
+        </div>
+
+        <div class="alert success" th:if="${param.updated != null}">
+            Part updated.
+        </div>
+
+        <div class="alert success" th:if="${param.deleted != null}">
+            Part deleted.
+        </div>
+
+        <div class="alert warning" th:if="${param.missing != null}">
+            That part was not found.
+        </div>
+
+        <div class="alert warning" th:if="${databaseError == true || param.databaseError != null}">
+            The parts table is not ready yet. Run database-ddl.sql in MySQL Workbench.
+        </div>
+
+        <section class="next-steps">
+            <table class="table" th:if="${!parts.isEmpty()}">
+                <thead>
+                    <tr>
+                        <th>Part Name</th>
+                        <th>Part Number</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="part : ${parts}">
+                        <td th:text="${part.partName}">Brake Cable</td>
+                        <td th:text="${part.partNumber == null || part.partNumber.isBlank() ? 'Not listed' : part.partNumber}">BRK-100</td>
+                        <td th:text="${#numbers.formatCurrency(part.price)}">$0.00</td>
+                        <td th:text="${part.quantity}">0</td>
+                        <td>
+                            <div class="table-actions">
+                                <a class="button small secondary" th:href="@{/parts/{id}/edit(id=${part.partId})}">Edit</a>
+                                <form class="inline-form"
+                                      th:action="@{/parts/{id}/delete(id=${part.partId})}"
+                                      method="post"
+                                      onsubmit="return confirm('Delete this part? Existing service orders will keep running without a selected part.');">
+                                    <button class="button small danger" type="submit">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p th:if="${parts.isEmpty() && databaseError == null}">
+                No parts have been added yet.
+            </p>
+        </section>
+
+        <p><a th:href="@{/}">Back to dashboard</a></p>
+    </main>
+</body>
+</html>

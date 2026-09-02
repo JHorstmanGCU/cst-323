@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${pageTitle}">Add Service Order</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <div th:replace="~{fragments/nav :: navbar('service-orders')}"></div>
+
+    <main class="page">
+        <div class="page-header">
+            <div>
+                <p class="eyebrow">Bike Shop</p>
+                <h1>Add Service Order</h1>
+            </div>
+        </div>
+
+        <section class="next-steps">
+            <div class="alert warning" th:if="${databaseError}">
+                The service order could not be saved yet. Check that database-ddl.sql was run and that MySQL is connected.
+            </div>
+
+            <div class="alert warning" th:if="${bikes.isEmpty() && databaseError == null}">
+                Add a bike first. Service orders need to be attached to an existing bike.
+            </div>
+
+            <form th:action="@{/service-orders}" th:object="${serviceOrderForm}" method="post">
+                <div class="form-grid">
+                    <div class="form-field full">
+                        <label for="bikeId">Bike</label>
+                        <select id="bikeId" th:field="*{bikeId}">
+                            <option value="">Choose a bike</option>
+                            <option th:each="bike : ${bikes}"
+                                    th:value="${bike.bikeId}"
+                                    th:text="${bike.customerName + ' - ' + bike.bikeName}">Bike</option>
+                        </select>
+                        <div class="error" th:errors="*{bikeId}"></div>
+                    </div>
+
+                    <div class="form-field full">
+                        <label for="partId">Part</label>
+                        <select id="partId" th:field="*{partId}">
+                            <option value="">No part selected</option>
+                            <option th:each="part : ${parts}"
+                                    th:value="${part.partId}"
+                                    th:text="${part.partName}">Part</option>
+                        </select>
+                        <div class="error" th:errors="*{partId}"></div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="serviceType">Service Type</label>
+                        <input id="serviceType" th:field="*{serviceType}">
+                        <div class="error" th:errors="*{serviceType}"></div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="dropoffDate">Dropoff Date</label>
+                        <input id="dropoffDate" type="date" th:field="*{dropoffDate}">
+                        <div class="error" th:errors="*{dropoffDate}"></div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="totalAmount">Total Amount</label>
+                        <input id="totalAmount" type="number" min="0" step="0.01" th:field="*{totalAmount}">
+                        <div class="error" th:errors="*{totalAmount}"></div>
+                    </div>
+
+                    <div class="form-field full">
+                        <label for="problemDescription">Problem Description</label>
+                        <textarea id="problemDescription" rows="5" th:field="*{problemDescription}"></textarea>
+                        <div class="error" th:errors="*{problemDescription}"></div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a class="button secondary" th:href="@{/service-orders}">Cancel</a>
+                    <button class="button" type="submit" th:disabled="${bikes.isEmpty()}">Save Service Order</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

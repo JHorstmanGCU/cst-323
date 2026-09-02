@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${pageTitle}">Bikes</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <div th:replace="~{fragments/nav :: navbar('bikes')}"></div>
+
+    <main class="page">
+        <div class="page-header">
+            <div>
+                <p class="eyebrow">Bike Shop</p>
+                <h1>Bikes</h1>
+            </div>
+            <a class="button" th:href="@{/bikes/new}">Add Bike</a>
+        </div>
+
+        <div class="alert success" th:if="${param.created != null}">
+            Bike added.
+        </div>
+
+        <div class="alert success" th:if="${param.updated != null}">
+            Bike updated.
+        </div>
+
+        <div class="alert success" th:if="${param.deleted != null}">
+            Bike deleted.
+        </div>
+
+        <div class="alert warning" th:if="${param.missing != null}">
+            That bike was not found.
+        </div>
+
+        <div class="alert warning" th:if="${databaseError == true || param.databaseError != null}">
+            The bikes table is not ready yet. Run database-ddl.sql in MySQL Workbench.
+        </div>
+
+        <section class="next-steps">
+            <table class="table" th:if="${!bikes.isEmpty()}">
+                <thead>
+                    <tr>
+                        <th>Bike</th>
+                        <th>Customer</th>
+                        <th>Serial Number</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="bike : ${bikes}">
+                        <td th:text="${bike.bikeName}">Trek Domane</td>
+                        <td th:text="${bike.customerName}">Customer Name</td>
+                        <td th:text="${bike.serialNumber == null || bike.serialNumber.isBlank() ? 'Not listed' : bike.serialNumber}">Serial Number</td>
+                        <td>
+                            <div class="table-actions">
+                                <a class="button small secondary" th:href="@{/bikes/{id}/edit(id=${bike.bikeId})}">Edit</a>
+                                <form class="inline-form"
+                                      th:action="@{/bikes/{id}/delete(id=${bike.bikeId})}"
+                                      method="post"
+                                      onsubmit="return confirm('Delete this bike? This will also delete its service orders.');">
+                                    <button class="button small danger" type="submit">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p th:if="${bikes.isEmpty() && databaseError == null}">
+                No bikes have been added yet.
+            </p>
+        </section>
+
+        <p><a th:href="@{/}">Back to dashboard</a></p>
+    </main>
+</body>
+</html>

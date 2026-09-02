@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${pageTitle}">Customers</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <div th:replace="~{fragments/nav :: navbar('customers')}"></div>
+
+    <main class="page">
+        <div class="page-header">
+            <div>
+                <p class="eyebrow">Bike Shop</p>
+                <h1>Customers</h1>
+            </div>
+            <a class="button" th:href="@{/customers/new}">Add Customer</a>
+        </div>
+
+        <div class="alert success" th:if="${param.created != null}">
+            Customer added.
+        </div>
+
+        <div class="alert success" th:if="${param.updated != null}">
+            Customer updated.
+        </div>
+
+        <div class="alert success" th:if="${param.deleted != null}">
+            Customer deleted.
+        </div>
+
+        <div class="alert warning" th:if="${param.missing != null}">
+            That customer was not found.
+        </div>
+
+        <div class="alert warning" th:if="${databaseError == true || param.databaseError != null}">
+            The app can run, but the customers table is not ready yet. Run database-ddl.sql in MySQL Workbench.
+        </div>
+
+        <section class="next-steps">
+            <table class="table" th:if="${!users.isEmpty()}">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.fullName}">Customer Name</td>
+                        <td th:text="${user.email}">customer@example.com</td>
+                        <td th:text="${user.phone == null || user.phone.isBlank() ? 'Not listed' : user.phone}">Phone</td>
+                        <td th:text="${user.role}">CUSTOMER</td>
+                        <td>
+                            <div class="table-actions">
+                                <a class="button small secondary" th:href="@{/customers/{id}/edit(id=${user.userId})}">Edit</a>
+                                <form class="inline-form"
+                                      th:action="@{/customers/{id}/delete(id=${user.userId})}"
+                                      method="post"
+                                      onsubmit="return confirm('Delete this customer? This will also delete their bikes and service orders.');">
+                                    <button class="button small danger" type="submit">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p th:if="${users.isEmpty() && databaseError == null}">
+                No customers have been added yet.
+            </p>
+        </section>
+
+        <p><a th:href="@{/}">Back to dashboard</a></p>
+    </main>
+</body>
+</html>

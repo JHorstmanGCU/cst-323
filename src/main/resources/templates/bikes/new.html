@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${pageTitle}">Add Bike</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <div th:replace="~{fragments/nav :: navbar('bikes')}"></div>
+
+    <main class="page">
+        <div class="page-header">
+            <div>
+                <p class="eyebrow">Bike Shop</p>
+                <h1>Add Bike</h1>
+            </div>
+        </div>
+
+        <section class="next-steps">
+            <div class="alert warning" th:if="${databaseError}">
+                The bike could not be saved yet. Check that database-ddl.sql was run and that MySQL is connected.
+            </div>
+
+            <div class="alert warning" th:if="${users.isEmpty() && databaseError == null}">
+                Add a customer first. Bikes need to be attached to an existing customer.
+            </div>
+
+            <form th:action="@{/bikes}" th:object="${bikeForm}" method="post">
+                <div class="form-grid">
+                    <div class="form-field full">
+                        <label for="userId">Customer</label>
+                        <select id="userId" th:field="*{userId}">
+                            <option value="">Choose a customer</option>
+                            <option th:each="user : ${users}" th:value="${user.userId}" th:text="${user.fullName}">Customer Name</option>
+                        </select>
+                        <div class="error" th:errors="*{userId}"></div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="brand">Brand</label>
+                        <input id="brand" th:field="*{brand}">
+                        <div class="error" th:errors="*{brand}"></div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="model">Model</label>
+                        <input id="model" th:field="*{model}">
+                        <div class="error" th:errors="*{model}"></div>
+                    </div>
+
+                    <div class="form-field full">
+                        <label for="serialNumber">Serial Number</label>
+                        <input id="serialNumber" th:field="*{serialNumber}">
+                        <div class="error" th:errors="*{serialNumber}"></div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a class="button secondary" th:href="@{/bikes}">Cancel</a>
+                    <button class="button" type="submit" th:disabled="${users.isEmpty()}">Save Bike</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

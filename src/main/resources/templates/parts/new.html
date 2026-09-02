@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${pageTitle}">Add Part</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <div th:replace="~{fragments/nav :: navbar('parts')}"></div>
+
+    <main class="page">
+        <div class="page-header">
+            <div>
+                <p class="eyebrow">Bike Shop</p>
+                <h1>Add Part</h1>
+            </div>
+        </div>
+
+        <section class="next-steps">
+            <div class="alert warning" th:if="${databaseError}">
+                The part could not be saved yet. Check that database-ddl.sql was run and that MySQL is connected.
+            </div>
+
+            <form th:action="@{/parts}" th:object="${partForm}" method="post">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="partName">Part Name</label>
+                        <input id="partName" th:field="*{partName}">
+                        <div class="error" th:errors="*{partName}"></div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="partNumber">Part Number</label>
+                        <input id="partNumber" th:field="*{partNumber}">
+                        <div class="error" th:errors="*{partNumber}"></div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="price">Price</label>
+                        <input id="price" type="number" min="0" step="0.01" th:field="*{price}">
+                        <div class="error" th:errors="*{price}"></div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="quantity">Quantity</label>
+                        <input id="quantity" type="number" min="0" th:field="*{quantity}">
+                        <div class="error" th:errors="*{quantity}"></div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a class="button secondary" th:href="@{/parts}">Cancel</a>
+                    <button class="button" type="submit">Save Part</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

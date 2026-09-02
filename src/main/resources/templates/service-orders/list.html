@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${pageTitle}">Service Orders</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <div th:replace="~{fragments/nav :: navbar('service-orders')}"></div>
+
+    <main class="page">
+        <div class="page-header">
+            <div>
+                <p class="eyebrow">Bike Shop</p>
+                <h1>Service Orders</h1>
+            </div>
+            <a class="button" th:href="@{/service-orders/new}">Add Service Order</a>
+        </div>
+
+        <div class="alert success" th:if="${param.created != null}">
+            Service order added.
+        </div>
+
+        <div class="alert success" th:if="${param.updated != null}">
+            Service order updated.
+        </div>
+
+        <div class="alert success" th:if="${param.deleted != null}">
+            Service order deleted.
+        </div>
+
+        <div class="alert warning" th:if="${param.missing != null}">
+            That service order was not found.
+        </div>
+
+        <div class="alert warning" th:if="${databaseError == true || param.databaseError != null}">
+            The service orders table is not ready yet. Run database-ddl.sql in MySQL Workbench.
+        </div>
+
+        <section class="next-steps">
+            <form class="filter-bar" th:action="@{/service-orders}" method="get">
+                <div class="filter-field">
+                    <label for="status">Filter by Status</label>
+                    <select id="status" name="status">
+                        <option value="" th:selected="${selectedStatus == ''}">All Statuses</option>
+                        <option th:each="status : ${statuses}"
+                                th:value="${status.name()}"
+                                th:text="${status.displayName}"
+                                th:selected="${selectedStatus == status.name()}">Not Started</option>
+                    </select>
+                </div>
+
+                <div class="filter-actions">
+                    <button class="button" type="submit">Filter</button>
+                    <a class="button secondary" th:href="@{/service-orders}">Clear</a>
+                </div>
+            </form>
+
+            <div class="alert warning" th:if="${filterError}">
+                That status filter was not recognized, so all service orders are shown.
+            </div>
+
+            <table class="table" th:if="${!orders.isEmpty()}">
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Customer</th>
+                        <th>Bike</th>
+                        <th>Service</th>
+                        <th>Part</th>
+                        <th>Status</th>
+                        <th>Total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="order : ${orders}">
+                        <td th:text="'#' + ${order.orderId}">#1</td>
+                        <td th:text="${order.customerName}">Customer Name</td>
+                        <td th:text="${order.bikeName}">Bike</td>
+                        <td th:text="${order.serviceType}">Tune Up</td>
+                        <td th:text="${order.partName == null ? 'No part selected' : order.partName}">Part</td>
+                        <td>
+                            <span class="status"
+                                  th:classappend="' status-' + ${order.status.name().toLowerCase()}"
+                                  th:text="${order.status.displayName}">Not Started</span>
+                        </td>
+                        <td th:text="${#numbers.formatCurrency(order.totalAmount)}">$0.00</td>
+                        <td>
+                            <div class="table-actions">
+                                <a class="button small secondary" th:href="@{/service-orders/{id}/edit(id=${order.orderId})}">Update</a>
+                                <form class="inline-form"
+                                      th:action="@{/service-orders/{id}/delete(id=${order.orderId})}"
+                                      method="post"
+                                      onsubmit="return confirm('Delete this service order?');">
+                                    <button class="button small danger" type="submit">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p th:if="${orders.isEmpty() && databaseError == null && selectedStatus == ''}">
+                No service orders have been added yet.
+            </p>
+
+            <p th:if="${orders.isEmpty() && databaseError == null && selectedStatus != ''}">
+                No service orders match this filter.
+            </p>
+        </section>
+
+        <p><a th:href="@{/}">Back to dashboard</a></p>
+    </main>
+</body>
+</html>
