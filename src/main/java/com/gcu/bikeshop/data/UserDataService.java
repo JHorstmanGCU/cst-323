@@ -71,7 +71,7 @@ public class UserDataService {
      * @param userForm customer form data
      */
     public void create(UserForm userForm) {
-        logger.info("Entering UserDataService.create for email={}", userForm.getEmail());
+        logger.info("Entering UserDataService.create");
         String sql = """
                 INSERT INTO users (first_name, last_name, email, password_hash, phone, role)
                 VALUES (?, ?, ?, ?, ?, 'CUSTOMER')
@@ -84,7 +84,7 @@ public class UserDataService {
                 "temporary-demo-password",
                 userForm.getPhone()
         );
-        logger.info("Leaving UserDataService.create for email={}", userForm.getEmail());
+        logger.info("Leaving UserDataService.create");
     }
 
     /**

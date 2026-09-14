@@ -47,6 +47,7 @@ public class BikeController {
         try {
             model.addAttribute("bikes", bikeService.getAllBikes());
         } catch (DataAccessException exception) {
+            logger.error("Database operation failed in BikeController ({})", exception.getClass().getSimpleName());
             model.addAttribute("bikes", java.util.List.of());
             model.addAttribute("databaseError", true);
         }
@@ -90,6 +91,7 @@ public class BikeController {
         try {
             bikeService.createBike(bikeForm);
         } catch (DataAccessException exception) {
+            logger.error("Database operation failed in BikeController ({})", exception.getClass().getSimpleName());
             prepareForm(model, bikeForm);
             model.addAttribute("databaseError", true);
             logger.info("Leaving BikeController.create with database error");
@@ -125,6 +127,7 @@ public class BikeController {
             bikeForm.setSerialNumber(bike.get().getSerialNumber());
             prepareEditForm(model, bike.get(), bikeForm);
         } catch (DataAccessException exception) {
+            logger.error("Database operation failed in BikeController ({})", exception.getClass().getSimpleName());
             logger.info("Leaving BikeController.edit with database error");
             return "redirect:/bikes?databaseError";
         }
@@ -166,6 +169,7 @@ public class BikeController {
         try {
             bikeService.updateBike(bikeForm, bikeId);
         } catch (DataAccessException exception) {
+            logger.error("Database operation failed in BikeController ({})", exception.getClass().getSimpleName());
             prepareEditForm(model, bike.get(), bikeForm);
             model.addAttribute("databaseError", true);
             logger.info("Leaving BikeController.update with database error");
@@ -189,6 +193,7 @@ public class BikeController {
         try {
             bikeService.deleteBike(bikeId);
         } catch (DataAccessException exception) {
+            logger.error("Database operation failed in BikeController ({})", exception.getClass().getSimpleName());
             logger.info("Leaving BikeController.delete with database error");
             return "redirect:/bikes?databaseError";
         }
@@ -210,6 +215,7 @@ public class BikeController {
         try {
             model.addAttribute("users", userService.getAllUsers());
         } catch (DataAccessException exception) {
+            logger.error("Database operation failed in BikeController ({})", exception.getClass().getSimpleName());
             model.addAttribute("users", java.util.List.of());
             model.addAttribute("databaseError", true);
         }
@@ -230,6 +236,7 @@ public class BikeController {
         try {
             model.addAttribute("users", userService.getAllUsers());
         } catch (DataAccessException exception) {
+            logger.error("Database operation failed in BikeController ({})", exception.getClass().getSimpleName());
             model.addAttribute("users", java.util.List.of());
             model.addAttribute("databaseError", true);
         }

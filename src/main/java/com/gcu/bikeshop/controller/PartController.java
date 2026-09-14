@@ -44,6 +44,7 @@ public class PartController {
         try {
             model.addAttribute("parts", partService.getAllParts());
         } catch (DataAccessException exception) {
+            logger.error("Database operation failed in PartController ({})", exception.getClass().getSimpleName());
             model.addAttribute("parts", java.util.List.of());
             model.addAttribute("databaseError", true);
         }
@@ -88,6 +89,7 @@ public class PartController {
         try {
             partService.createPart(partForm);
         } catch (DataAccessException exception) {
+            logger.error("Database operation failed in PartController ({})", exception.getClass().getSimpleName());
             model.addAttribute("pageTitle", "Add Part");
             model.addAttribute("databaseError", true);
             logger.info("Leaving PartController.create with database error");
@@ -126,6 +128,7 @@ public class PartController {
             model.addAttribute("part", part.get());
             model.addAttribute("partForm", partForm);
         } catch (DataAccessException exception) {
+            logger.error("Database operation failed in PartController ({})", exception.getClass().getSimpleName());
             logger.info("Leaving PartController.edit with database error");
             return "redirect:/parts?databaseError";
         }
@@ -168,6 +171,7 @@ public class PartController {
         try {
             partService.updatePart(partForm, partId);
         } catch (DataAccessException exception) {
+            logger.error("Database operation failed in PartController ({})", exception.getClass().getSimpleName());
             model.addAttribute("pageTitle", "Edit Part");
             model.addAttribute("part", part.get());
             model.addAttribute("databaseError", true);
@@ -192,6 +196,7 @@ public class PartController {
         try {
             partService.deletePart(partId);
         } catch (DataAccessException exception) {
+            logger.error("Database operation failed in PartController ({})", exception.getClass().getSimpleName());
             logger.info("Leaving PartController.delete with database error");
             return "redirect:/parts?databaseError";
         }

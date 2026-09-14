@@ -70,6 +70,7 @@ public class ServiceOrderController {
                 model.addAttribute("orders", serviceOrderService.getServiceOrdersByStatus(selectedStatus));
             }
         } catch (DataAccessException exception) {
+            logger.error("Database operation failed in ServiceOrderController ({})", exception.getClass().getSimpleName());
             model.addAttribute("orders", java.util.List.of());
             model.addAttribute("databaseError", true);
         }
@@ -117,6 +118,7 @@ public class ServiceOrderController {
         try {
             serviceOrderService.createServiceOrder(serviceOrderForm);
         } catch (DataAccessException exception) {
+            logger.error("Database operation failed in ServiceOrderController ({})", exception.getClass().getSimpleName());
             prepareCreateForm(model, serviceOrderForm);
             model.addAttribute("databaseError", true);
             logger.info("Leaving ServiceOrderController.create with database error");
@@ -150,6 +152,7 @@ public class ServiceOrderController {
             updateForm.setTotalAmount(order.get().getTotalAmount());
             prepareEditForm(model, order.get(), updateForm);
         } catch (DataAccessException exception) {
+            logger.error("Database operation failed in ServiceOrderController ({})", exception.getClass().getSimpleName());
             logger.info("Leaving ServiceOrderController.edit with database error");
             return "redirect:/service-orders?databaseError";
         }
@@ -191,6 +194,7 @@ public class ServiceOrderController {
         try {
             serviceOrderService.updateServiceOrder(updateForm, orderId);
         } catch (DataAccessException exception) {
+            logger.error("Database operation failed in ServiceOrderController ({})", exception.getClass().getSimpleName());
             prepareEditForm(model, order.get(), updateForm);
             model.addAttribute("databaseError", true);
             logger.info("Leaving ServiceOrderController.update with database error");
@@ -214,6 +218,7 @@ public class ServiceOrderController {
         try {
             serviceOrderService.deleteServiceOrder(orderId);
         } catch (DataAccessException exception) {
+            logger.error("Database operation failed in ServiceOrderController ({})", exception.getClass().getSimpleName());
             logger.info("Leaving ServiceOrderController.delete with database error");
             return "redirect:/service-orders?databaseError";
         }
@@ -236,6 +241,7 @@ public class ServiceOrderController {
             model.addAttribute("bikes", bikeService.getAllBikes());
             model.addAttribute("parts", partService.getAllParts());
         } catch (DataAccessException exception) {
+            logger.error("Database operation failed in ServiceOrderController ({})", exception.getClass().getSimpleName());
             model.addAttribute("bikes", java.util.List.of());
             model.addAttribute("parts", java.util.List.of());
             model.addAttribute("databaseError", true);

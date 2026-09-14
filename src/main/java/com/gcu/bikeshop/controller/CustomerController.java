@@ -45,6 +45,7 @@ public class CustomerController {
         try {
             model.addAttribute("users", userService.getAllUsers());
         } catch (DataAccessException exception) {
+            logger.error("Database operation failed in CustomerController ({})", exception.getClass().getSimpleName());
             model.addAttribute("users", java.util.List.of());
             model.addAttribute("databaseError", true);
         }
@@ -94,6 +95,7 @@ public class CustomerController {
             logger.info("Leaving CustomerController.create with duplicate email");
             return "customers/new";
         } catch (DataAccessException exception) {
+            logger.error("Database operation failed in CustomerController ({})", exception.getClass().getSimpleName());
             model.addAttribute("pageTitle", "Add Customer");
             model.addAttribute("databaseError", true);
             logger.info("Leaving CustomerController.create with database error");
@@ -132,6 +134,7 @@ public class CustomerController {
             model.addAttribute("user", user.get());
             model.addAttribute("userForm", userForm);
         } catch (DataAccessException exception) {
+            logger.error("Database operation failed in CustomerController ({})", exception.getClass().getSimpleName());
             logger.info("Leaving CustomerController.edit with database error");
             return "redirect:/customers?databaseError";
         }
@@ -180,6 +183,7 @@ public class CustomerController {
             logger.info("Leaving CustomerController.update with duplicate email");
             return "customers/edit";
         } catch (DataAccessException exception) {
+            logger.error("Database operation failed in CustomerController ({})", exception.getClass().getSimpleName());
             model.addAttribute("pageTitle", "Edit Customer");
             model.addAttribute("user", user.get());
             model.addAttribute("databaseError", true);
@@ -204,6 +208,7 @@ public class CustomerController {
         try {
             userService.deleteUser(userId);
         } catch (DataAccessException exception) {
+            logger.error("Database operation failed in CustomerController ({})", exception.getClass().getSimpleName());
             logger.info("Leaving CustomerController.delete with database error");
             return "redirect:/customers?databaseError";
         }

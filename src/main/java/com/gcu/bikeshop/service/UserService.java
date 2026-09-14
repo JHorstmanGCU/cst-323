@@ -52,9 +52,9 @@ public class UserService {
      * @param userForm customer form data
      */
     public void createUser(UserForm userForm) {
-        logger.info("Entering UserService.createUser for email={}", userForm.getEmail());
+        logger.info("Entering UserService.createUser");
         userDataService.create(userForm);
-        logger.info("Leaving UserService.createUser for email={}", userForm.getEmail());
+        logger.info("Leaving UserService.createUser");
     }
 
     /**
