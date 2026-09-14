@@ -5,6 +5,10 @@ Projects related to and required by cst-323 cloud computing at GCU.
 
 This is a Spring Boot web application for tracking bike shop customers, bikes, parts, and service orders.
 
+## Hosted Application
+
+[Open the Bike Shop Order Tracker](https://cst-323-clc-bike-shop-4c0f8f783461.herokuapp.com/)
+
 ## Local Setup
 
 1. Create the local MySQL database by running `database-ddl.sql` in MySQL Workbench.
